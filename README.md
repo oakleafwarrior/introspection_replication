@@ -145,3 +145,7 @@ We report the three main metrics per `N_TRAIN` and plot them to see how the expl
 > the explainer to correctly predict both parts.
 
 The function below evaluates the SFT explainer model as per the papter. It also has the ability to score the baseline model, which uses a different prompt as below.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection-replication/blob/main/replication.ipynb)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection-replication/blob/main/iteration.ipynb)
