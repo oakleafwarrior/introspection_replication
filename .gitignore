@@ -1,4 +1,6 @@
 /.vscode
 /notes
 /data
+/scripts
 .DS_Store
+make_result_figures.py

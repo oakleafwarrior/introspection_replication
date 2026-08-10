@@ -1,9 +1,44 @@
 # README.md
 
 ## Introduction
-We reproduce the results of "Training Language Models to Explain Their Own Computations" in a few colab notebooks by post training our own Qwen3 language models. We only reproduce sections 2.3 and 2.4, the activation patching and input ablation explainer models, and we do not do a whole SFT, but rather LoRA due to compute limitations.
+We reproduce and expand upon the results of "Training Language Models to Explain Their Own Computations" in a few colab notebooks by post training our own Qwen3 language models. We only reproduce sections 2.3 and 2.4, the activation patching and input ablation explainer models, and we do not do a whole SFT, but rather LoRA due to compute limitations.
+
+In these notebooks, we post train smaller explainer models (Qwen3-0.6B,1.7B,4B) on a fixed target model: Qwen3-8B, and see how well they perform compared to Qwen3-8B post trained to explain itself. 
+<!-- Some lack of performance may be due to an intrinsic lack of ability among smaller models.  -->
+
+We also test if iterated explainer, target training improves the explainer performance. In the paper, the authors take a model $M_0$ and train an explainer model $E_1$. We can set $M_1 = E_1$ and train $E_2$ to explain $M_1$, and repeat: $E_n$ is trained starting from $M_{n-1} = E_{n-1}$'s weights, and its training labels are $M_{n-1}$'s own observed zero-shot/with-hint behavior, not the fixed Qwen3-8B labels the dataset ships with.
+
+Does iterating this proceuder produce better explainer models of earlier models in the sequence? That is, is $E_n$ a better explainer of $M_k$ than $E_k$ was, for $k < n$?
 
 Li, B. Z., Guo, Z. C., Huang, V., Steinhardt, J., & Andreas, J. (2025). *Training Language Models to Explain Their Own Computations*. arXiv:2511.08579. https://arxiv.org/abs/2511.08579
+
+## Results
+
+## Smaller Explainer Models
+
+Smaller and quantized models exhibit different behavior in explaining activation patching and input ablation. Within task, the evaluation metric scores have consistent trend. See `figures/` for all plots, a couple are exhibited below.
+
+The non-quantized activation patching explainer models post trained from smaller Qwen3 models (1.7B, 4B) do comparably well in each evaluation metric as the original model. However, more training examples are likely needed because the scores are still increasing.
+
+![Content match scores on activation patching tasks follow similar trajector over `N_TRAIN` between non-quantized models. A plateau is not reached.](figures/comparison/no_quant/patching_content_match.png)
+
+However, the 1.7B and 4B input ablation explainer models do not perform as well on the evaluation metrics as the explainer model post trained from Qwen3-8B, the target model. This is true for all `N_TRAIN`, and the smaller models scores plateau lower than Qwen3-8B. The quantized smaller models fair even worse.
+
+![Exact match scores for input ablation explainer models over `N_TRAIN`. Smaller and quantized models do worse, but follow similar trajectories.](figures/comparison/all_models/ablation_exact_match.png)
+
+## Explainer Iteration Experiment
+
+We find that higher-order explainers $E_k$ for $k > 1$ are noticeably worse at explaining $M_0$ per the `exact_match` and `has_changed_f1` metric. This pattern does not hold for `content_match`. Interestingly, the process appears to stabilize in that for each $E_k$ $E_n$ $n > k$ score similarly well: high-order explainers do as well as the explainer trained specifically for the base-model, as long as the base-model was also an explainer model. Additionally, the $E_n$'s scores evaluated on $E_{n-1}$ do not improve significantly after $E_2$. Together these results suggest that this process converges to a fixed point. 
+
+We train the higher-order explainers on input ablation because regenerating responses to the MMLU dataset is significantly easier than running the activation patching pipeline.
+
+![Exact match score is worse for $E_k$, $k>1$ when explaining $M_0$, however $E_k$ is explained similarly well by $E_n$ $n > k > 1$. A similar pattern is found in `has_changed_f1` score.](figures/iterating/Qwen3-1.7B_chain_grid_exact_match.png)
+
+![Content match does not follow this pattern](figures/iterating/Qwen3-1.7B_chain_grid_content_match.png)
+
+This experiment was done on unquantized Qwen3-1.7B, so perhaps the quick convergence to a explainer capability is due to the simplicity of the model. Also
+
+![Explainer evaluation scores stabilize after $n = 2$.](figures/iterating/Qwen3-1.7B_chain_diagonal.png)
 
 ## Contents
 This repo contains notebooks detailing the results of replications. We replicate the papers methods using Qwen3 models of size 0.6, 1.7, 4 and 8 billion parameters. We also quantize the models to reduce VRAM usage. Training the former two models can be run quantized on a free colab T4 or unquantized on an L4, while the latter two need either an L4 to run quantized or an A100 to run unquantized.
@@ -12,8 +47,27 @@ Please download the notebooks and rerun the experiments yourself. There is no su
 
 The quantized runs are on [128, 512, 2048, 8192] training examples while the unquantized ones are on [128, 256, 512, 1024, 2048, 4096, 8192, 16384]. 
 
+## Repository Structure
+
+```
+introspection_colab/
+├── README.md
+├── introspection.pdf              # the paper being replicated
+├── replication.ipynb              # template notebook: N_TRAIN sweep for input ablation + activation patching
+├── iteration.ipynb                # template notebook: chained explainer/target (E_n explains M_{n-1}) training
+├── finished_notebooks/            # completed per-model runs
+│   ├── notebook_Qwen3-0.6B.ipynb
+│   ├── notebook_Qwen3-1.7B.ipynb
+│   ├── notebook_Qwen3-1.7B_iterating.ipynb
+│   ├── notebook_Qwen3-4B.ipynb
+│   └── no_quantization/           # same runs, unquantized (needs an A100)
+├── make_result_figures.py         # regenerates the figures below from data/, specific to naming conventions (gitignored)
+├── data/                          # eval CSVs/JSONs synced down from Drive (generated locally, gitignored)
+└── figures/                       # PNGs written by make_result_figures.py, embedded under Results above
+```
+
 ## Background
-This is copied from the notebooks:
+This is copied from the notebooks. The paper contains more detail.
 
 ### Input Ablation
 
