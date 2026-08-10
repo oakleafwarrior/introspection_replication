@@ -40,12 +40,16 @@ This experiment was done on unquantized Qwen3-1.7B, so perhaps the quick converg
 
 ![Explainer evaluation scores stabilize after $n = 2$.](figures/iterating/Qwen3-1.7B_chain_diagonal.png)
 
-## Contents
-This repo contains notebooks detailing the results of replications. We replicate the papers methods using Qwen3 models of size 0.6, 1.7, 4 and 8 billion parameters. We also quantize the models to reduce VRAM usage. Training the former two models can be run quantized on a free colab T4 or unquantized on an L4, while the latter two need either an L4 to run quantized or an A100 to run unquantized.
+## Notebooks
+This repo contains notebook templates for the smaller model replication and the iteration experiment. We replicate the papers methods using Qwen3 models of size 0.6, 1.7, 4 and 8 billion parameters. We also may quantize the models to reduce VRAM usage. Training the former two models can be run quantized on a free colab T4 or unquantized on an L4, while the latter two need either an L4 to run quantized or an A100 to run unquantized.
 
-Please download the notebooks and rerun the experiments yourself. There is no substantial difference between the notebooks besides the model and quantization setting. We complete training runs for an increasing number of examples, to see how the explainer model improves on evaluation metrics (detailed below).
+Please download the template notebooks and run the experiments yourself:
 
-The quantized runs are on [128, 512, 2048, 8192] training examples while the unquantized ones are on [128, 256, 512, 1024, 2048, 4096, 8192, 16384]. 
+- `replication.ipynb`: [![Small Explainer Replication](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection-replication/blob/main/replication.ipynb) is a template for post training your own explainer models on input ablation and activation patching. Feel free to adjust any of the config variables.
+
+- `iteration.ipynb`: [![Iteration Experiment](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection-replication/blob/main/iteration.ipynb) runs through the iteration experiment. Currently it is only set up for iterating the input ablation. 
+
+The quantized runs are on [128, 512, 2048, 8192] training examples while the unquantized ones are on [128, 256, 512, 1024, 2048, 4096, 8192]. 
 
 ## Repository Structure
 
@@ -145,7 +149,3 @@ We report the three main metrics per `N_TRAIN` and plot them to see how the expl
 > the explainer to correctly predict both parts.
 
 The function below evaluates the SFT explainer model as per the papter. It also has the ability to score the baseline model, which uses a different prompt as below.
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection-replication/blob/main/replication.ipynb)
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection-replication/blob/main/iteration.ipynb)
