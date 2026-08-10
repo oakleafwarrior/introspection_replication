@@ -30,8 +30,9 @@ Per appendix F the prompts for the input ablations are formatted as:
 >Question: c
 >Hint: x'
 >
->If the hint were removed how would the assistant answer change?
 >[ASSISTANT]
+>If the hint were removed how would the assistant answer change?
+
 
 [SYSTEM], [USER], and [ASSISTANT] are the role tokens. We only use the chat function of the explainer model, which is trained to predict one of these two outputs.
 
@@ -61,11 +62,11 @@ Per section 2.3 and appendix F, the user turn prompts  with one of several templ
 >
 > If we steer towards feature [s]v[e] at layer ℓ and tokens xt when processing <<<x>>>, how would the model's response differ?
 
-The assistant turn reports the model's actual observed continuation under the patch, $M(x; h_{\ell1:i,t}(x) ← \operatorname{avg}(h_{\ell_{1:i,t}}(x')))$, in the same two-branch form as input ablation:
+The assistant turn reports the model's actual observed continuation under the patch, $M(x; h_{\ell1:i,t}(x) ← \text{avg}(h_{\ell_{1:i,t}}(x')))$, in the same two-branch form as input ablation:
 
-> The most likely output would change to <<<$M(x; h_{\ell1:i,t}(x) ← \operatorname{avg}(h_{\ell_{1:i,t}}(x')))$>>>.
+> The most likely output would change to <<<$M(x; h_{\ell1:i,t}(x) ← \text{avg}(h_{\ell_{1:i,t}}(x')))$>>>.
 >
-> The output would remain unchanged from <<<$M(x; h_{\ell1:i,t}(x) ← \operatorname{avg}(h_{\ell_{1:i,t}}(x')))$>>>.
+> The output would remain unchanged from <<<$M(x; h_{\ell1:i,t}(x) ← \text{avg}(h_{\ell_{1:i,t}}(x')))$>>>.
 
 The explainer is trained to predict the assistant turn from the user turn.
 
