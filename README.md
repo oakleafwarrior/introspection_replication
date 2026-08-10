@@ -45,9 +45,9 @@ This repo contains notebook templates for the smaller model replication and the 
 
 Please download the template notebooks and run the experiments yourself:
 
-- `replication.ipynb`: [![Small Explainer Replication](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection-replication/blob/main/replication.ipynb) is a template for post training your own explainer models on input ablation and activation patching. Feel free to adjust any of the config variables.
+- `replication.ipynb`: [![Small Explainer Replication](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection_replication/blob/main/replication.ipynb) is a template for post training your own explainer models on input ablation and activation patching. Feel free to adjust any of the config variables.
 
-- `iteration.ipynb`: [![Iteration Experiment](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection-replication/blob/main/iteration.ipynb) runs through the iteration experiment. Currently it is only set up for iterating the input ablation. 
+- `iteration.ipynb`: [![Iteration Experiment](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/oakleafwarrior/introspection_replication/blob/main/iteration.ipynb) runs through the iteration experiment. Currently it is only set up for iterating the input ablation. 
 
 The quantized runs are on [128, 512, 2048, 8192] training examples while the unquantized ones are on [128, 256, 512, 1024, 2048, 4096, 8192]. 
 
