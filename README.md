@@ -118,15 +118,15 @@ Per section 2.3 and appendix F, the user turn prompts  with one of several templ
 
 The assistant turn reports the model's actual observed continuation under the patch, $M(x; h_{\ell1:i,t}(x) ← \text{avg}(h_{\ell_{1:i,t}}(x')))$, in the same two-branch form as input ablation:
 
-> The most likely output would change to <<<$M(x; h_{\ell1:i,t}(x) ← \text{avg}(h_{\ell_{1:i,t}}(x')))$>>>.
+> The most likely output would change to <<< $M(x; h_{\ell1:i,t}(x) ← \text{avg}(h_{\ell_{1:i,t}}(x')))$ >>>.
 >
-> The output would remain unchanged from <<<$M(x; h_{\ell1:i,t}(x) ← \text{avg}(h_{\ell_{1:i,t}}(x')))$>>>.
+> The output would remain unchanged from <<< $M(x; h_{\ell1:i,t}(x) ← \text{avg}(h_{\ell_{1:i,t}}(x')))$ >>>.
 
 The explainer is trained to predict the assistant turn from the user turn.
 
 We do change from a straight replication. `act_patch_qwen3_8b_counterfact` records activations captured from Qwen3-8B no matter which model we train as the explainer. Instead of using `MODEL_ID = "Qwen3-8B"` so the injected vector `v` already matches the explainer's embedding dimension we keep `MODEL_ID` small for compute reasons (e.g. `Qwen3-0.6B`) and instead learn a linear projection, following section 2.2's treatment of hidden-size mismatch (eq. 3):
 
-> For explainer models whose hidden dimension do not match the target model's, we introduce a linear projection Π_ℓ ∈ R^{d_E × d_M} from the target model hidden size d_M to the explainer model hidden size d_E, which is trained jointly with the rest of LM parameters. We learn a separate projection per layer ℓ of the target model.
+> For explainer models whose hidden dimension do not match the target model's, we introduce a linear projection $\Pi_\ell \in \mathbb{R}^{d_E \times d_M}$ from the target model hidden size $d_M$ to the explainer model hidden size $d_E$ which is trained jointly with the rest of LM parameters. We learn a separate projection per layer $\ell$ of the target model.
 
 ## Evaluation Metrics
 This is also copied from the notebooks.
